@@ -3,20 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Book; // Import Model Book
 
 class BookController extends Controller
 {
-    public function index()
+   public function index()
     {
-        // Membuat data array dummy 5 buku
-        $books = [
-            ['id' => 1, 'judul' => 'Pemrograman PHP', 'penulis' => 'Andi', 'tahun' => 2020],
-            ['id' => 2, 'judul' => 'Laravel untuk Pemula', 'penulis' => 'Budi', 'tahun' => 2021],
-            ['id' => 3, 'judul' => 'Basis Data', 'penulis' => 'Citra', 'tahun' => 2019],
-            ['id' => 4, 'judul' => 'Algoritma dan Pemrograman', 'penulis' => 'Dewi', 'tahun' => 2022],
-            ['id' => 5, 'judul' => 'Pemrograman Berorientasi Objek', 'penulis' => 'Eko', 'tahun' => 2023]
-        ];
-
+        $books = Book::all(); // Mengambil semua data dari database
         return view('books.index', compact('books'));
     }
 
