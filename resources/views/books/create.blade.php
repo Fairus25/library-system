@@ -4,10 +4,22 @@
     <h2>Tambah Buku Baru</h2>
     <form action="{{ route('books.store') }}" method="POST">
         @csrf
-        <div>Judul: <input type="text" name="title" required></div>
-        <div>Penulis: <input type="text" name="author" required></div>
-        <div>Tahun: <input type="number" name="year" required></div>
-        <div>Stok: <input type="number" name="stock" required></div>
+        <div style="margin-bottom: 10px;">
+            Judul: <input type="text" name="title" value="{{ old('title') }}">
+            @error('title') <div style="color:red; font-size:12px;">{{ $message }}</div> @enderror
+        </div>
+        <div style="margin-bottom: 10px;">
+            Penulis: <input type="text" name="author" value="{{ old('author') }}">
+            @error('author') <div style="color:red; font-size:12px;">{{ $message }}</div> @enderror
+        </div>
+        <div style="margin-bottom: 10px;">
+            Tahun: <input type="number" name="year" value="{{ old('year') }}">
+            @error('year') <div style="color:red; font-size:12px;">{{ $message }}</div> @enderror
+        </div>
+        <div style="margin-bottom: 10px;">
+            Stok: <input type="number" name="stock" value="{{ old('stock') }}">
+            @error('stock') <div style="color:red; font-size:12px;">{{ $message }}</div> @enderror
+        </div>
         <button type="submit">Simpan</button>
     </form>
     <br>

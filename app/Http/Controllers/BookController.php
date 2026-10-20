@@ -23,12 +23,16 @@ class BookController extends Controller
     // STORE - Menyimpan Data Buku Baru
     public function store(Request $request)
     {
-        Book::create([
-            'title' => $request->title,
-            'author' => $request->author,
-            'year' => $request->year,
-            'stock' => $request->stock,
+        // 1. Proses Validasi
+        $validatedData = $request->validate([
+            'title'  => 'required|string|min:3|max:255', // rule baru: min 3 karakter, max 255
+            'author' => 'required|string|min:3|max:255',
+            'year'   => 'required|integer|digits:4|min:1901|max:2155', // rule baru: harus 4 digit, rentang tahun MySQL
+            'stock'  => 'required|integer|min:0' // rule baru: tidak boleh minus (minimal 0)
         ]);
+
+        // 2. Simpan jika validasi lolos
+        Book::create($validatedData);
         return redirect()->route('books.index');
     }
 
@@ -47,12 +51,16 @@ class BookController extends Controller
     // UPDATE - Menyimpan Perubahan Data
     public function update(Request $request, Book $book)
     {
-        $book->update([
-            'title' => $request->title,
-            'author' => $request->author,
-            'year' => $request->year,
-            'stock' => $request->stock,
+        // 1. Proses Validasi
+        $validatedData = $request->validate([
+            'title'  => 'required|string|min:3|max:255',
+            'author' => 'required|string|min:3|max:255',
+            'year'   => 'required|integer|digits:4|min:1901|max:2155',
+            'stock'  => 'required|integer|min:0'
         ]);
+
+        // 2. Update jika validasi lolos
+        $book->update($validatedData);
         return redirect()->route('books.index');
     }
 

@@ -22,7 +22,7 @@
     
     <footer>
         <hr>
-        <p>Library System - Tugas Pertemuan 6</p>
+    
     </footer>
 </body>
 </html>
