@@ -4,70 +4,74 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Category;
 
 class BookController extends Controller
 {
-    // READ - Menampilkan Daftar Buku
+    // INDEX - Menampilkan daftar buku beserta nama kategorinya
     public function index()
     {
-        $books = Book::all();
+        $books = Book::with('category')->get();
         return view('books.index', compact('books'));
     }
 
-    // CREATE - Menampilkan Form Tambah Buku
+    // CREATE - Menampilkan form tambah buku dengan pilihan kategori
     public function create()
     {
-        return view('books.create');
+        $categories = Category::all();
+        return view('books.create', compact('categories'));
     }
 
-    // STORE - Menyimpan Data Buku Baru
+    // STORE - Menyimpan data buku baru
     public function store(Request $request)
     {
-        // 1. Proses Validasi
         $validatedData = $request->validate([
-            'title'  => 'required|string|min:3|max:255', // rule baru: min 3 karakter, max 255
-            'author' => 'required|string|min:3|max:255',
-            'year'   => 'required|integer|digits:4|min:1901|max:2155', // rule baru: harus 4 digit, rentang tahun MySQL
-            'stock'  => 'required|integer|min:0' // rule baru: tidak boleh minus (minimal 0)
+            'category_id' => 'required|exists:categories,id',
+            'title'       => 'required|string|min:3|max:255',
+            'author'      => 'required|string|min:3|max:255',
+            'year'        => 'required|integer|digits:4|min:1901|max:2155',
+            'stock'       => 'required|integer|min:0'
         ]);
 
-        // 2. Simpan jika validasi lolos
         Book::create($validatedData);
+
         return redirect()->route('books.index');
     }
 
-    // SHOW - Menampilkan Detail Buku (biarkan kosong / standar dulu)
+    // SHOW - Menampilkan detail buku
     public function show(Book $book)
     {
         return view('books.show', compact('book'));
     }
 
-    // EDIT - Menampilkan Form Edit
+    // EDIT - Menampilkan form edit buku dengan daftar kategori
     public function edit(Book $book)
     {
-        return view('books.edit', compact('book'));
+        $categories = Category::all();
+        return view('books.edit', compact('book', 'categories'));
     }
 
-    // UPDATE - Menyimpan Perubahan Data
+    // UPDATE - Menyimpan perubahan data buku
     public function update(Request $request, Book $book)
     {
-        // 1. Proses Validasi
         $validatedData = $request->validate([
-            'title'  => 'required|string|min:3|max:255',
-            'author' => 'required|string|min:3|max:255',
-            'year'   => 'required|integer|digits:4|min:1901|max:2155',
-            'stock'  => 'required|integer|min:0'
+            'category_id' => 'required|exists:categories,id',
+            'title'       => 'required|string|min:3|max:255',
+            'author'      => 'required|string|min:3|max:255',
+            'year'        => 'required|integer|digits:4|min:1901|max:2155',
+            'stock'       => 'required|integer|min:0'
         ]);
 
-        // 2. Update jika validasi lolos
         $book->update($validatedData);
+
         return redirect()->route('books.index');
     }
 
-    // DELETE - Menghapus Data
+    // DESTROY - Menghapus data buku
     public function destroy(Book $book)
     {
         $book->delete();
+
         return redirect()->route('books.index');
     }
 }
