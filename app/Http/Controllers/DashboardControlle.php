@@ -2,9 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Book;
+use App\Models\Borrowing;
+use App\Models\Category;
+use App\Models\Member;
 
-class DashboardControlle extends Controller
+class DashboardController extends Controller
 {
-    //
+    public function index()
+    {
+        $totalCategories = Category::count();
+        $totalBooks = Book::count();
+        $totalMembers = Member::count();
+        $totalBorrowings = Borrowing::count();
+        $activeBorrowings = Borrowing::where('status', 'borrowed')->count();
+
+        return view('dashboard', compact(
+            'totalCategories',
+            'totalBooks',
+            'totalMembers',
+            'totalBorrowings',
+            'activeBorrowings'
+        ));
+    }
 }
